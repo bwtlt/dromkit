@@ -45,16 +45,18 @@ class Sequencer extends React.Component {
     const { playing, activeNote, instruments } = this.state;
     return (
       <div className="container">
-        <TransportButton enabled={playing} onClick={this.play} />
-        {instruments.map((item) => (
-          <Instrument
-            key={item.id}
-            name={item.name}
-            activeNote={activeNote}
-            lineLength={NUMBER_OF_NOTES}
-            sound={item.soundPath}
-          />
-        ))}
+        <div className="container-fluid sequencer">
+          {instruments.map((item) => (
+            <Instrument
+              key={item.id}
+              name={item.name}
+              activeNote={activeNote}
+              lineLength={NUMBER_OF_NOTES}
+              sound={item.soundPath}
+            />
+          ))}
+          <TransportButton enabled={playing} onClick={this.play} />
+        </div>
       </div>
     );
   }

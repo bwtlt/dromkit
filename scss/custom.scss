@@ -1,4 +1,5 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 body {
   margin: 0;
@@ -37,14 +38,53 @@ code {
   color: #61dafb;
 }
 
+.app-body {
+  background: #E5E5E5;
+  height: 100vh;
+}
+
+.sequencer {
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 40px;
+}
+
 .btn-circle.btn-sm {
-            width: 30px;
-            height: 30px;
-            padding: 6px 0px;
-            border-radius: 15px;
-            font-size: 8px;
-            text-align: center;
-            margin-right: 1em;
+  width: 30px;
+  height: 30px;
+  padding: 6px 0px;
+  border-radius: 15px;
+  font-size: 8px;
+  text-align: center;
+  margin-right: 3px;
+  border-style: none;
+}
+
+.transport-btn {
+  width: 50px;
+  height: 50px;
+  padding: 6px 0px;
+  border-radius: 20px;
+  font-size: 8px;
+  text-align: center;
+  margin-right: 3px;
+  border-style: none;
+  font-size: 15px;
+}
+
+.transport-btn-enabled {
+  width: 50px;
+  height: 50px;
+  padding: 6px 0px;
+  border-radius: 20px;
+  font-size: 8px;
+  text-align: center;
+  margin-right: 3px;
+  border-style: none;
+  background-color: #282c34;
+  color: $white;
+  font-size: 15px;
 }
 
 .note-active-enabled {
@@ -60,5 +100,30 @@ code {
 }
 
 .note-idle {
-    background-color: $white;
+    background-color: #C4C4C4;
+}
+
+.instrument-line {
+  display: flex;
+  flex-direction: row;
+  padding: 7px;
+  margin: 7px;
+
+  background: #ffffff;
+  width: auto;
+}
+
+.instrument-name {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  // align-items: center;
+  text-align: right;
+  margin-right: 5px;
+
+  color: #000000;
+}
+
+.instrument-notes {
 }

@@ -44,9 +44,9 @@ class Instrument extends React.Component {
       />
     ));
     return (
-      <div className="row justify-content-center">
-        <div className="col-1">{name}</div>
-        <div className="col">{elements}</div>
+      <div className="row instrument-line">
+        <div className="col-1 instrument-name">{name}</div>
+        <div className="col instrument-notes">{elements}</div>
       </div>
     );
   }

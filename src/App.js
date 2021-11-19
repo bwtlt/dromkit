@@ -8,8 +8,10 @@ const App = function () {
         <h1>DROMKIT</h1>
         <h2>Online drum machine</h2>
       </header>
-      <Sequencer />
-      <footer>
+      <div className="app-body">
+        <Sequencer />
+      </div>
+      <footer className="fixed-bottom">
         Dev by
         { ' ' }
         <a href="https://bwatelet.fr">bwatelet.fr</a>
