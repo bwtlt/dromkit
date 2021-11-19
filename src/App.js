@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import Sequencer from './components/sequencer';
 
-function App() {
+const App = function () {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>DROMKIT</h1>
+        <h2>Online drum machine</h2>
       </header>
+      <Sequencer />
+      <footer>
+        Dev by
+        { ' ' }
+        <a href="https://bwatelet.fr">bwatelet.fr</a>
+      </footer>
     </div>
   );
-}
+};
 
 export default App;
