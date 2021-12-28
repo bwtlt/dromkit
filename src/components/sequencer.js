@@ -1,18 +1,20 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Instrument from './instrument';
-import TransportButton from './transport_button';
+import Transport from './transport_button';
 import kickSound from '../sounds/kick.wav';
 import snareSound from '../sounds/snare.wav';
 
 const NUMBER_OF_NOTES = 16;
-const BPM = 120;
-const INTERVAL_PERIOD = 60000 / BPM / 4;
+const MIN_BPM = 1;
+const MAX_BPM = 300;
 
 class Sequencer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      BPM: 120,
+      BPMUserInput: 120,
       playing: 0,
       activeNote: -1,
       instruments: [
@@ -22,27 +24,55 @@ class Sequencer extends React.Component {
     };
   }
 
-  play = () => {
-    const { playing } = this.state;
-    if (playing) {
-      this.setState({ playing: 0, activeNote: -1 });
-      clearInterval(playing);
-    } else {
-      const playTimer = setInterval(() => {
-        const { activeNote } = this.state;
-        this.setState({
-          activeNote: activeNote === NUMBER_OF_NOTES - 1 ? 0 : activeNote + 1,
-        });
-      }, INTERVAL_PERIOD);
-
+  play = (BPM) => {
+    const INTERVAL_PERIOD = 60000 / BPM / 4;
+    return setInterval(() => {
+      const { activeNote } = this.state;
       this.setState({
-        playing: playTimer,
+        activeNote: activeNote === NUMBER_OF_NOTES - 1 ? 0 : activeNote + 1,
+      });
+    }, INTERVAL_PERIOD);
+  };
+
+  toggle = () => {
+    const { BPM, playing } = this.state;
+    if (playing) {
+      clearInterval(playing);
+      this.setState({ playing: 0 });
+    } else {
+      clearInterval(playing);
+      this.setState({
+        playing: this.play(BPM),
       });
     }
   };
 
+  stop = () => {
+    const { playing } = this.state;
+    clearInterval(playing);
+    this.setState({ playing: 0, activeNote: -1 });
+  }
+
+  handleBPMChange = (input) => {
+    let value = parseInt(input, 10);
+    if (isNaN(value)) {
+      value = 0;
+    }
+    if (value > MAX_BPM) {
+      value = MAX_BPM;
+    } else if (value < MIN_BPM) {
+      value = MIN_BPM;
+    }
+    this.setState({ BPM: value });
+    const { playing } = this.state;
+    if (playing) {
+      clearInterval(playing);
+      this.setState({ playing: this.play(value) });
+    }
+  }
+
   render() {
-    const { playing, activeNote, instruments } = this.state;
+    const { BPM, playing, activeNote, instruments } = this.state;
     return (
       <div className="container">
         <div className="container-fluid sequencer">
@@ -55,7 +85,7 @@ class Sequencer extends React.Component {
               sound={item.soundPath}
             />
           ))}
-          <TransportButton enabled={playing} onClick={this.play} />
+          <Transport playing={playing} play={this.toggle} stop={this.stop} BPM={BPM} handleBPMChange={this.handleBPMChange} />
         </div>
       </div>
     );

@@ -1,0 +1,143 @@
+@import "../../node_modules/bootstrap/scss/bootstrap";
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.app-body {
+  background: #E5E5E5;
+  height: 100vh;
+}
+
+.sequencer {
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 40px;
+}
+
+.btn-circle.btn-sm {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0px;
+  border-radius: 15px;
+  font-size: 8px;
+  text-align: center;
+  margin-right: 3px;
+  border-style: none;
+}
+
+.transport-btn {
+  width: 50px;
+  height: 50px;
+  padding: 6px 0px;
+  border-radius: 20px;
+  font-size: 8px;
+  text-align: center;
+  margin-right: 3px;
+  border-style: none;
+  font-size: 15px;
+}
+
+.transport-btn-enabled {
+  width: 50px;
+  height: 50px;
+  padding: 6px 0px;
+  border-radius: 20px;
+  font-size: 8px;
+  text-align: center;
+  margin-right: 3px;
+  border-style: none;
+  background-color: #282c34;
+  color: $white;
+  font-size: 15px;
+}
+
+.note-active-enabled {
+    background-color: $red-700;
+}
+
+.note-active {
+    background-color: $orange-400;
+}
+
+.note-enabled {
+    background-color: $yellow-400;
+}
+
+.note-idle {
+    background-color: #C4C4C4;
+}
+
+.instrument-line {
+  display: flex;
+  flex-direction: row;
+  padding: 7px;
+  margin: 7px;
+
+  background: #ffffff;
+  width: auto;
+}
+
+.instrument-name {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  // align-items: center;
+  text-align: right;
+  margin-right: 5px;
+
+  color: #000000;
+}
+
+.instrument-notes {
+}
+
+.transport {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 7px;
+}
+
+.bpm-input {
+  display: flex;
+  flex-direction: row;
+  width: 8em;
+}
