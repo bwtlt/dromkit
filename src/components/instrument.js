@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
+import { Button } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import Note from './note';
 
 class Instrument extends React.Component {
@@ -31,7 +34,7 @@ class Instrument extends React.Component {
 
   render() {
     const { name, notes } = this.state;
-    const { activeNote, nbSteps } = this.props;
+    const { activeNote, nbSteps, removeCallback, instrumentId } = this.props;
     if (notes[activeNote]?.enabled) {
       this.play();
     }
@@ -48,6 +51,7 @@ class Instrument extends React.Component {
       <div className="row instrument-line">
         <div className="col-1 instrument-name">{name}</div>
         <div className="col instrument-notes">{elements}</div>
+        <button className="delete-instrument" onClick={() => {removeCallback(instrumentId)}}><FontAwesomeIcon icon={faTimes}/></button>
       </div>
     );
   }

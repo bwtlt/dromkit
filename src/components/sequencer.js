@@ -2,6 +2,7 @@ import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Instrument from './instrument';
 import Transport from './transport_button';
+import AddInstrument from './add_instrument';
 import kickSound from '../sounds/kick.wav';
 import snareSound from '../sounds/snare.wav';
 
@@ -10,6 +11,7 @@ const MIN_BPM = 1;
 const MAX_BPM = 300;
 const MIN_NB_STEPS = 1;
 const MAX_NB_STEPS = 64;
+const MAX_NB_INSTRUMENTS = 16;
 
 class Sequencer extends React.Component {
   constructor(props) {
@@ -91,6 +93,21 @@ class Sequencer extends React.Component {
     }
   }
 
+  addInstrument = (e) => {
+    e.preventDefault();
+    let name = e.target[0].value;
+    if (name.length == 0) {
+      name = "INST";
+    }
+    this.setState({ instruments: [...this.state.instruments, { id: uuidv4(), name, soundPath: kickSound }] }) //simple value
+  }
+
+  removeInstrument = (e) => {
+    this.setState({instruments: this.state.instruments.filter(function(inst) { 
+        return inst.id !== e;
+    })});
+  }
+
   render() {
     const { BPM, playing, activeNote, instruments, nbSteps } = this.state;
     return (
@@ -99,14 +116,25 @@ class Sequencer extends React.Component {
           {instruments.map((item) => (
             <Instrument
               key={item.id}
+              instrumentId={item.id}
               name={item.name}
               activeNote={activeNote}
               nbSteps={nbSteps}
               lineLength={MAX_NB_STEPS}
               sound={item.soundPath}
+              removeCallback={(id) => {this.removeInstrument(id)}}
             />
           ))}
-          <Transport playing={playing} play={this.toggle} stop={this.stop} steps={nbSteps} BPM={BPM} handleBPMCallback={this.handleBPMChange} handleStepsCallback={this.handleStepsChange} />
+          <Transport
+            playing={playing}
+            play={this.toggle}
+            stop={this.stop}
+            steps={nbSteps}
+            BPM={BPM}
+            handleBPMCallback={this.handleBPMChange}
+            handleStepsCallback={this.handleStepsChange}
+          />
+          <AddInstrument addInstrument={this.addInstrument} maxReached={instruments.length >= MAX_NB_INSTRUMENTS} />
         </div>
       </div>
     );

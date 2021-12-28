@@ -1,3 +1,4 @@
+@use 'colors';
 @import "../../node_modules/bootstrap/scss/bootstrap";
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
@@ -25,21 +26,17 @@ code {
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: colors.get(neutrals, grey-900);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
+  color: colors.get(primary, teal-vivid-600);
 }
 
 .app-body {
-  background: #E5E5E5;
+  background: colors.get(neutrals, grey-100);
   height: 100vh;
 }
 
@@ -73,6 +70,10 @@ code {
   font-size: 15px;
 }
 
+.transport-btn:hover {
+  background-color: colors.get(primary, teal-vivid-700);
+}
+
 .transport-btn-enabled {
   width: 50px;
   height: 50px;
@@ -82,34 +83,55 @@ code {
   text-align: center;
   margin-right: 3px;
   border-style: none;
-  background-color: #282c34;
-  color: $white;
+  background-color: colors.get(primary, teal-vivid-700);
+  color: colors.get(neutrals, grey-050);
   font-size: 15px;
 }
 
+.transport-btn-enabled:hover {
+  background-color: colors.get(primary, teal-vivid-400);
+}
+
 .note-active-enabled {
-    background-color: $red-700;
+    background-color: colors.get(supporting, yellow-vivid-900);
+}
+
+.note-active-enabled:hover {
+  background-color: colors.get(supporting, yellow-vivid-800);
 }
 
 .note-active {
-    background-color: $orange-400;
+    background-color: colors.get(supporting, yellow-vivid-600);
+}
+
+.note-active:hover {
+  background-color: colors.get(supporting, yellow-vivid-500);
 }
 
 .note-enabled {
-    background-color: $yellow-400;
+    background-color: colors.get(supporting, yellow-vivid-500);
+}
+
+.note-enabled:hover {
+  background-color: colors.get(supporting, yellow-vivid-400);
 }
 
 .note-idle {
-    background-color: #C4C4C4;
+    background-color: colors.get(neutrals, grey-200);
+}
+
+.note-idle:hover {
+  background-color: colors.get(neutrals, grey-100);
 }
 
 .instrument-line {
   display: flex;
   flex-direction: row;
+  align-items: center;
   padding: 7px;
   margin: 7px;
-
-  background: #ffffff;
+  border-radius: 15px;
+  background: colors.get(neutrals, grey-050);
   width: auto;
 }
 
@@ -121,7 +143,7 @@ code {
   text-align: right;
   margin-right: 5px;
 
-  color: #222222;
+  color: colors.get(primary, teal-vivid-900);
 }
 
 .instrument-notes {
@@ -141,4 +163,21 @@ code {
   width: 8em;
   margin-right: 3px;
   height: 50px;
+}
+
+.delete-instrument {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0px;
+  border-radius: 15px;
+  font-size: 12px;
+  text-align: center;
+  margin-right: 3px;
+  border-style: none;
+  color: colors.get(neutrals, grey-900);
+}
+
+.delete-instrument:hover {
+  background-color: colors.get(supporting, red-vivid-800);
+  color: colors.get(neutrals, grey-050);
 }
