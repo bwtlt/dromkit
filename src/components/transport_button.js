@@ -5,10 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause, faStop } from '@fortawesome/free-solid-svg-icons';
 
 const Transport = function (props) {
-  const { playing, play, stop, BPM, handleBPMChange } = props;
+  const { playing, play, stop, BPM, steps, handleBPMCallback, handleStepsCallback } = props;
 
-  const handleChange = (e) => {
-    handleBPMChange(e.target.value);
+  const handleBPMChange = (e) => {
+    handleBPMCallback(e.target.value);
+  }
+
+  const handleStepsChange = (e) => {
+    handleStepsCallback(e.target.value);
   }
 
   return (
@@ -16,7 +20,7 @@ const Transport = function (props) {
       <TransportButton btnType={playing ? "pause" : "play"} enabled={playing} onClick={play} />
       <TransportButton btnType="stop" enabled={0} onClick={stop} />
       <InputGroup
-        className="bpm-input"
+        className="param-input"
       > 
         <Form.Control
             required
@@ -24,9 +28,22 @@ const Transport = function (props) {
             type="number"
             maxLength="3"
             defaultValue={BPM}
-            onChange={handleChange}
+            onChange={handleBPMChange}
         />
         <InputGroup.Text>BPM</InputGroup.Text>
+      </InputGroup>
+      <InputGroup
+        className="param-input"
+      > 
+        <Form.Control
+            required
+            name="Steps"
+            type="number"
+            maxLength="3"
+            defaultValue={steps}
+            onChange={handleStepsChange}
+        />
+        <InputGroup.Text>steps</InputGroup.Text>
       </InputGroup>
     </div>
   );
@@ -36,7 +53,8 @@ Transport.propTypes = {
   play: PropTypes.func.isRequired,
   stop: PropTypes.func.isRequired,
   BPM: PropTypes.number.isRequired,
-  handleBPMChange: PropTypes.func.isRequired,
+  handleBPMCallback: PropTypes.func.isRequired,
+  handleStepsCallback: PropTypes.func.isRequired,
 };
 
 const getIcon = (btnType) => {

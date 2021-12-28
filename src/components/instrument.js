@@ -31,11 +31,12 @@ class Instrument extends React.Component {
 
   render() {
     const { name, notes } = this.state;
-    const { activeNote } = this.props;
+    const { activeNote, nbSteps } = this.props;
     if (notes[activeNote]?.enabled) {
       this.play();
     }
-    const elements = notes.map((note, i) => (
+    const activeSteps = notes.slice(0, nbSteps);
+    const elements = activeSteps.map((note, i) => (
       <Note
         key={note.id}
         active={activeNote === i}
@@ -55,6 +56,7 @@ class Instrument extends React.Component {
 Instrument.propTypes = {
   name: PropTypes.string.isRequired,
   lineLength: PropTypes.number.isRequired,
+  nbSteps: PropTypes.number.isRequired,
   sound: PropTypes.string.isRequired,
   activeNote: PropTypes.number.isRequired,
 };

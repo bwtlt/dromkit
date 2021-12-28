@@ -118,11 +118,10 @@ code {
   font-style: normal;
   font-weight: normal;
   font-size: 18px;
-  // align-items: center;
   text-align: right;
   margin-right: 5px;
 
-  color: #000000;
+  color: #222222;
 }
 
 .instrument-notes {
@@ -136,8 +135,10 @@ code {
   margin: 7px;
 }
 
-.bpm-input {
+.param-input {
   display: flex;
   flex-direction: row;
   width: 8em;
+  margin-right: 3px;
+  height: 50px;
 }
