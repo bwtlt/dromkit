@@ -3,8 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Instrument from './instrument';
 import Transport from './transport_button';
 import AddInstrument from './add_instrument';
-import kickSound from '../sounds/kick.wav';
-import snareSound from '../sounds/snare.wav';
+
 
 const NUMBER_OF_NOTES = 16;
 const MIN_BPM = 1;
@@ -13,8 +12,10 @@ const MIN_NB_STEPS = 1;
 const MAX_NB_STEPS = 64;
 const MAX_NB_INSTRUMENTS = 16;
 
+
 class Sequencer extends React.Component {
   constructor(props) {
+    const { audioContext } = props;
     super(props);
     this.state = {
       BPM: 120,
@@ -22,13 +23,17 @@ class Sequencer extends React.Component {
       playing: 0,
       activeNote: -1,
       instruments: [
-        { id: uuidv4(), name: 'KICK', soundPath: kickSound },
-        { id: uuidv4(), name: 'SNARE', soundPath: snareSound },
+        { id: uuidv4(), name: 'KICK', soundUrl: 'https://freesound.org/apiv2/sounds/568581/' },
+        { id: uuidv4(), name: 'SNARE', soundUrl: 'https://freesound.org/apiv2/sounds/131363/' },
       ],
     };
   }
 
   play = (BPM) => {
+    const { audioContext } = this.props;
+    if (audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
     const INTERVAL_PERIOD = 60000 / BPM / 4;
     return setInterval(() => {
       const { activeNote, nbSteps } = this.state;
@@ -99,7 +104,7 @@ class Sequencer extends React.Component {
     if (name.length == 0) {
       name = "INST";
     }
-    this.setState({ instruments: [...this.state.instruments, { id: uuidv4(), name, soundPath: kickSound }] }) //simple value
+    this.setState({ instruments: [...this.state.instruments, { id: uuidv4(), name, soundUrl: '' }] }) //simple value
   }
 
   removeInstrument = (e) => {
@@ -110,6 +115,7 @@ class Sequencer extends React.Component {
 
   render() {
     const { BPM, playing, activeNote, instruments, nbSteps } = this.state;
+    const { audioContext } = this.props;
     return (
       <div className="container">
         <div className="container-fluid sequencer">
@@ -121,7 +127,8 @@ class Sequencer extends React.Component {
               activeNote={activeNote}
               nbSteps={nbSteps}
               lineLength={MAX_NB_STEPS}
-              sound={item.soundPath}
+              audioContext={audioContext}
+              soundUrl={item.soundUrl}
               removeCallback={(id) => {this.removeInstrument(id)}}
             />
           ))}

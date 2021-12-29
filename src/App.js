@@ -2,6 +2,8 @@ import React from 'react';
 import Sequencer from './components/sequencer';
 
 const App = function () {
+  const audioContext = new AudioContext();
+
   return (
     <div className="App">
       <header className="App-header">
@@ -9,7 +11,7 @@ const App = function () {
         <h2>Online drum machine</h2>
       </header>
       <div className="app-body">
-        <Sequencer />
+        <Sequencer audioContext={audioContext} />
       </div>
       <footer className="fixed-bottom">
         Dev by

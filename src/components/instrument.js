@@ -6,18 +6,49 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import Note from './note';
 
+const axios = require('axios');
+
 class Instrument extends React.Component {
   constructor(props) {
-    const { name, lineLength, sound } = props;
+    const { name, lineLength, soundUrl } = props;
+    console.log(`const url ${soundUrl}`);
     super(props);
     this.state = {
       name,
       notes: new Array(lineLength)
         .fill(null)
         .map(() => ({ id: uuidv4(), enabled: false })),
-      sound: new Audio(sound),
+      sound: null,
+      state: 'loading',
     };
-  }
+  };
+
+  load = async () => {
+    const { audioContext, soundUrl } = this.props;
+    // Make a request for a user with a given ID
+    const url = `${soundUrl}?token=${process.env.REACT_APP_FREESOUND_APIKEY}`;
+    await axios.get(url)
+      .then(async response => {
+        // handle success
+        return await axios.get(response.data.previews["preview-hq-mp3"], {
+            responseType: 'arraybuffer',
+        });
+      })
+      .then(response => {console.log(response.data); return response.data;})
+      .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+      .then(audioBuffer => {
+        this.setState({ sound: audioBuffer, state: 'ready' });
+      })
+      .catch((error) => {
+        // handle error
+        this.setState({ state: 'error' });
+        console.log(error);
+      });
+  };
+
+  async componentDidMount() {
+    await this.load();
+}
 
   toggle = (n) => {
     const { notes } = this.state;
@@ -26,27 +57,44 @@ class Instrument extends React.Component {
     this.setState({ notes: notesSlice });
   };
 
-  play = () => {
+  playSound = () => {
     const { sound } = this.state;
-    sound.currentTime = 0;
-    sound.play();
+    const { audioContext } = this.props;
+    var source = audioContext.createBufferSource();
+    source.buffer = sound;
+    source.connect(audioContext.destination);
+    source.start(0);
   };
 
   render() {
-    const { name, notes } = this.state;
+    const { name, notes, state } = this.state;
     const { activeNote, nbSteps, removeCallback, instrumentId } = this.props;
     if (notes[activeNote]?.enabled) {
-      this.play();
+      this.playSound();
     }
     const activeSteps = notes.slice(0, nbSteps);
-    const elements = activeSteps.map((note, i) => (
-      <Note
-        key={note.id}
-        active={activeNote === i}
-        enabled={note.enabled}
-        onClick={() => this.toggle(i)}
-      />
-    ));
+    let elements;
+    switch(state) {
+      case 'loading':
+        elements = <span>Loading...</span>;
+        break;
+      case 'ready':
+        elements = activeSteps.map((note, i) => (
+          <Note
+            key={note.id}
+            active={activeNote === i}
+            enabled={note.enabled}
+            onClick={() => this.toggle(i)}
+          />
+        ));
+        break;
+      case 'error':
+      default:
+        console.log("coucou");
+        elements = <span>Failed to load sound</span>;
+        break;
+    }
+
     return (
       <div className="row instrument-line">
         <div className="col-1 instrument-name">{name}</div>
@@ -61,7 +109,7 @@ Instrument.propTypes = {
   name: PropTypes.string.isRequired,
   lineLength: PropTypes.number.isRequired,
   nbSteps: PropTypes.number.isRequired,
-  sound: PropTypes.string.isRequired,
+  soundUrl: PropTypes.string.isRequired,
   activeNote: PropTypes.number.isRequired,
 };
 
