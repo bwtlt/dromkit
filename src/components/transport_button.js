@@ -52,7 +52,7 @@ const Transport = function (props) {
 };
 
 Transport.propTypes = {
-  playing: PropTypes.bool.isRequired,
+  playing: PropTypes.number.isRequired,
   play: PropTypes.func.isRequired,
   stop: PropTypes.func.isRequired,
   BPM: PropTypes.number.isRequired,

@@ -12,6 +12,8 @@ const MIN_NB_STEPS = 1;
 const MAX_NB_STEPS = 64;
 const MAX_NB_INSTRUMENTS = 16;
 
+const getSoundUrl = (id) => `https://freesound.org/apiv2/sounds/${id}/`;
+
 class Sequencer extends React.Component {
   constructor(props) {
     super(props);
@@ -24,12 +26,12 @@ class Sequencer extends React.Component {
         {
           id: uuidv4(),
           name: 'KICK',
-          soundUrl: 'https://freesound.org/apiv2/sounds/568581/',
+          soundUrl: getSoundUrl('568581'),
         },
         {
           id: uuidv4(),
           name: 'SNARE',
-          soundUrl: 'https://freesound.org/apiv2/sounds/131363/',
+          soundUrl: getSoundUrl('131363'),
         },
       ],
     };
@@ -70,7 +72,7 @@ class Sequencer extends React.Component {
 
   handleBPMChange = (input) => {
     let value = parseInt(input, 10);
-    if (value.isNaN()) {
+    if (Number.isNaN(value)) {
       value = 0;
     }
     if (value > MAX_BPM) {
@@ -88,7 +90,7 @@ class Sequencer extends React.Component {
 
   handleStepsChange = (input) => {
     let value = parseInt(input, 10);
-    if (value.isNaN()) {
+    if (Number.isNaN(value)) {
       value = MIN_NB_STEPS;
     }
     if (value > MAX_NB_STEPS) {
@@ -104,16 +106,12 @@ class Sequencer extends React.Component {
     }
   };
 
-  addInstrument = (e) => {
-    e.preventDefault();
-    let name = e.target[0].value;
-    if (name.length === 0) {
-      name = 'INST';
-    }
+  addInstrument = (instrument) => {
+    const { name, id } = instrument;
     this.setState((prevState) => ({
       instruments: [
         ...prevState.instruments,
-        { id: uuidv4(), name, soundUrl: '' },
+        { id: uuidv4(), name, soundUrl: getSoundUrl(id) },
       ],
     }));
   };

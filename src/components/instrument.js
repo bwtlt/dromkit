@@ -108,7 +108,7 @@ Instrument.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   audioContext: PropTypes.object.isRequired,
   removeCallback: PropTypes.func.isRequired,
-  instrumentId: PropTypes.number.isRequired,
+  instrumentId: PropTypes.string.isRequired,
 };
 
 export default Instrument;

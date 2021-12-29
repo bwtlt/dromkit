@@ -41,6 +41,10 @@ code {
 }
 
 .sequencer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
   width: max-content;
   margin-left: auto;
   margin-right: auto;
@@ -133,6 +137,7 @@ code {
   border-radius: 15px;
   background: colors.get(neutrals, grey-050);
   width: auto;
+  max-height: 44px;
 }
 
 .instrument-name {
@@ -142,11 +147,11 @@ code {
   font-size: 18px;
   text-align: right;
   margin-right: 5px;
-
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 6em;
   color: colors.get(primary, teal-vivid-900);
-}
-
-.instrument-notes {
 }
 
 .transport {
@@ -178,6 +183,57 @@ code {
 }
 
 .delete-instrument:hover {
-  background-color: colors.get(supporting, red-vivid-800);
   color: colors.get(neutrals, grey-050);
+  background-color: colors.get(supporting, red-vivid-800);
+}
+
+.found-sound-list-item {
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+}
+
+.found-sound {
+  width: 100%;
+  height: 32px;
+  border: 0px;
+  margin: 0px;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: colors.get(primary, teal-vivid-050);
+}
+
+.found-sound:hover {
+  background-color: colors.get(primary, teal-vivid-200);
+}
+
+.add-instrument {
+  color: colors.get(primary, teal-vivid-900);
+}
+
+.found-sound:hover .add-instrument {
+  color: colors.get(primary, teal-vivid-050);
+}
+
+.found-sound-list {
+  width: 100%;
+}
+
+.add-instrument-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 30rem;
+}
+
+.add-instrument-name {
+  width: 80%;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
