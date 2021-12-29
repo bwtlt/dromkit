@@ -1,9 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import Instrument from './instrument';
 import Transport from './transport_button';
 import AddInstrument from './add_instrument';
-
 
 const NUMBER_OF_NOTES = 16;
 const MIN_BPM = 1;
@@ -12,10 +12,8 @@ const MIN_NB_STEPS = 1;
 const MAX_NB_STEPS = 64;
 const MAX_NB_INSTRUMENTS = 16;
 
-
 class Sequencer extends React.Component {
   constructor(props) {
-    const { audioContext } = props;
     super(props);
     this.state = {
       BPM: 120,
@@ -23,8 +21,16 @@ class Sequencer extends React.Component {
       playing: 0,
       activeNote: -1,
       instruments: [
-        { id: uuidv4(), name: 'KICK', soundUrl: 'https://freesound.org/apiv2/sounds/568581/' },
-        { id: uuidv4(), name: 'SNARE', soundUrl: 'https://freesound.org/apiv2/sounds/131363/' },
+        {
+          id: uuidv4(),
+          name: 'KICK',
+          soundUrl: 'https://freesound.org/apiv2/sounds/568581/',
+        },
+        {
+          id: uuidv4(),
+          name: 'SNARE',
+          soundUrl: 'https://freesound.org/apiv2/sounds/131363/',
+        },
       ],
     };
   }
@@ -32,7 +38,7 @@ class Sequencer extends React.Component {
   play = (BPM) => {
     const { audioContext } = this.props;
     if (audioContext.state === 'suspended') {
-        audioContext.resume();
+      audioContext.resume();
     }
     const INTERVAL_PERIOD = 60000 / BPM / 4;
     return setInterval(() => {
@@ -60,11 +66,11 @@ class Sequencer extends React.Component {
     const { playing } = this.state;
     clearInterval(playing);
     this.setState({ playing: 0, activeNote: -1 });
-  }
+  };
 
   handleBPMChange = (input) => {
     let value = parseInt(input, 10);
-    if (isNaN(value)) {
+    if (value.isNaN()) {
       value = 0;
     }
     if (value > MAX_BPM) {
@@ -78,11 +84,11 @@ class Sequencer extends React.Component {
       clearInterval(playing);
       this.setState({ playing: this.play(value) });
     }
-  }
+  };
 
   handleStepsChange = (input) => {
     let value = parseInt(input, 10);
-    if (isNaN(value)) {
+    if (value.isNaN()) {
       value = MIN_NB_STEPS;
     }
     if (value > MAX_NB_STEPS) {
@@ -96,25 +102,32 @@ class Sequencer extends React.Component {
       clearInterval(playing);
       this.setState({ playing: this.play(BPM) });
     }
-  }
+  };
 
   addInstrument = (e) => {
     e.preventDefault();
     let name = e.target[0].value;
-    if (name.length == 0) {
-      name = "INST";
+    if (name.length === 0) {
+      name = 'INST';
     }
-    this.setState({ instruments: [...this.state.instruments, { id: uuidv4(), name, soundUrl: '' }] }) //simple value
-  }
+    this.setState((prevState) => ({
+      instruments: [
+        ...prevState.instruments,
+        { id: uuidv4(), name, soundUrl: '' },
+      ],
+    }));
+  };
 
   removeInstrument = (e) => {
-    this.setState({instruments: this.state.instruments.filter(function(inst) { 
-        return inst.id !== e;
-    })});
-  }
+    this.setState((prevState) => ({
+      instruments: prevState.instruments.filter((inst) => inst.id !== e),
+    }));
+  };
 
   render() {
-    const { BPM, playing, activeNote, instruments, nbSteps } = this.state;
+    const {
+      BPM, playing, activeNote, instruments, nbSteps,
+    } = this.state;
     const { audioContext } = this.props;
     return (
       <div className="container">
@@ -129,7 +142,9 @@ class Sequencer extends React.Component {
               lineLength={MAX_NB_STEPS}
               audioContext={audioContext}
               soundUrl={item.soundUrl}
-              removeCallback={(id) => {this.removeInstrument(id)}}
+              removeCallback={(id) => {
+                this.removeInstrument(id);
+              }}
             />
           ))}
           <Transport
@@ -141,11 +156,19 @@ class Sequencer extends React.Component {
             handleBPMCallback={this.handleBPMChange}
             handleStepsCallback={this.handleStepsChange}
           />
-          <AddInstrument addInstrument={this.addInstrument} maxReached={instruments.length >= MAX_NB_INSTRUMENTS} />
+          <AddInstrument
+            addInstrument={this.addInstrument}
+            maxReached={instruments.length >= MAX_NB_INSTRUMENTS}
+          />
         </div>
       </div>
     );
   }
 }
+
+Sequencer.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  audioContext: PropTypes.object.isRequired,
+};
 
 export default Sequencer;
