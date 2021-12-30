@@ -7,6 +7,7 @@ import Instrument from '../classes/instrument';
 import InstrumentComponent from './instrumentcomponent';
 import Transport from './transport_button';
 import AddInstrument from './add_instrument';
+import LoadPattern from './load_pattern';
 
 const NUMBER_OF_NOTES = 16;
 const MIN_BPM = 1;
@@ -24,6 +25,18 @@ class Sequencer extends React.Component {
       playing: 0,
       activeNote: -1,
       instruments: [
+        new Instrument(
+          '',
+          uuidv4(),
+          '568581',
+          NUMBER_OF_NOTES,
+        ),
+        new Instrument(
+          '',
+          uuidv4(),
+          '568581',
+          NUMBER_OF_NOTES,
+        ),
         new Instrument(
           '',
           uuidv4(),
@@ -126,11 +139,12 @@ class Sequencer extends React.Component {
     }));
   };
 
-  loadPattern = () => {
+  loadPattern = (pattern) => {
     const { instruments } = this.state;
-    const instrumentsSlice = instruments.slice();
-    instrumentsSlice.forEach(() => {
+    pattern.forEach((line, i) => {
+      instruments[i]?.notes.forEach((note, j) => instruments[i].setNote(j, line[j]));
     });
+    this.setState({ instruments });
   }
 
   render() {
@@ -179,7 +193,9 @@ class Sequencer extends React.Component {
             addInstrument={this.addInstrument}
             maxReached={instruments.length >= MAX_NB_INSTRUMENTS}
           />
-          <button type="button" onClick={this.loadPattern}>Load pattern</button>
+          <LoadPattern
+            loadPattern={this.loadPattern}
+          />
         </div>
       </div>
     );

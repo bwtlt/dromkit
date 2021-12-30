@@ -10,10 +10,16 @@ class Instrument {
     this.notes = new Array(nbSteps).fill(null).map(() => ({ id: uuidv4(), enabled: false }));
   }
 
+  setNote = (n, value) => {
+    if (value) {
+      this.notes[n].enabled = true;
+    } else {
+      this.notes[n].enabled = false;
+    }
+  };
+
   toggleNote = (n) => {
-    const notesSlice = this.notes.slice();
-    notesSlice[n].enabled = !notesSlice[n].enabled;
-    this.notes = notesSlice;
+    this.setNote(n, !this.notes[n].enabled);
   };
 
   setNbSteps = (n) => {
