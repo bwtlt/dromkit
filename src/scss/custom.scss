@@ -51,12 +51,22 @@ code {
   padding-top: 40px;
 }
 
+.step-number {
+  @extend .step;
+  background-color: colors.get(neutrals, grey-800);
+  color: colors.get(primary, teal-vivid-600);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
 .btn-circle.btn-sm {
   width: 30px;
   height: 30px;
   padding: 6px 0px;
   border-radius: 15px;
-  font-size: 8px;
+  font-size: 12px;
   text-align: center;
   margin-right: 3px;
   border-style: none;
@@ -128,22 +138,37 @@ code {
   background-color: colors.get(neutrals, grey-100);
 }
 
-.instrument-line {
+.sequencer-line {
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 7px;
   margin: 7px;
   border-radius: 15px;
-  background: colors.get(neutrals, grey-050);
   width: auto;
   max-height: 44px;
+}
+
+.instrument-line {
+  background: colors.get(neutrals, grey-050);
+}
+
+.step {
+  width: 30px;
+}
+
+.note-button {
+  border: none;
+  background: none;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .instrument-notes {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
 }
 
 .instrument-name {
@@ -158,6 +183,9 @@ code {
   text-overflow: ellipsis;
   width: 6em;
   color: colors.get(primary, teal-vivid-900);
+}
+
+.instrument-overlay {
   cursor: help;
 }
 

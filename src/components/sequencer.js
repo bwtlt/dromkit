@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
+import Step from './step';
+import Line from './line';
 import Instrument from './instrument';
 import Transport from './transport_button';
 import AddInstrument from './add_instrument';
@@ -131,9 +133,17 @@ class Sequencer extends React.Component {
       BPM, playing, activeNote, instruments, nbSteps,
     } = this.state;
     const { audioContext } = this.props;
+
+    const stepsNumber = (
+      <>
+        {[...Array(nbSteps).keys()].map((i) => (<Step className="step-number">{i + 1}</Step>))}
+      </>
+    );
+
     return (
       <div className="container">
         <div className="container-fluid sequencer">
+          <Line elements={stepsNumber} />
           {instruments.map((item) => (
             <Instrument
               key={item.id}

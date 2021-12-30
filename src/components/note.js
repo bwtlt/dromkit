@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Step from './step';
 
 const Note = function (props) {
-  let className = 'btn-circle btn-sm';
+  let className = '';
   const { active, enabled, onClick } = props;
   if (active && enabled) {
     className += ' note-active-enabled';
@@ -13,7 +14,7 @@ const Note = function (props) {
   } else {
     className += ' note-idle';
   }
-  return <button type="button" aria-label="Note" onClick={onClick} className={className} />;
+  return <button type="button" aria-label="Note" onClick={onClick} className="note-button"><Step className={className} /></button>;
 };
 
 Note.propTypes = {

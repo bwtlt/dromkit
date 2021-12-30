@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
+import Line from './line';
 import Note from './note';
 
 const axios = require('axios');
@@ -103,21 +104,24 @@ class Instrument extends React.Component {
     if (notes[activeNote]?.enabled) {
       this.playSound();
     }
-    const activeSteps = notes.slice(0, nbSteps);
     let elements;
     switch (state) {
       case 'loading':
         elements = <span>Loading...</span>;
         break;
       case 'ready':
-        elements = activeSteps.map((note, i) => (
-          <Note
-            key={note.id}
-            active={activeNote === i}
-            enabled={note.enabled}
-            onClick={() => this.toggle(i)}
-          />
-        ));
+        elements = (
+          <>
+            {notes.slice(0, nbSteps).map((note, i) => (
+              <Note
+                key={note.id}
+                active={activeNote === i}
+                enabled={note.enabled}
+                onClick={() => this.toggle(i)}
+              />
+            ))}
+          </>
+        );
         break;
       case 'error':
       default:
@@ -127,14 +131,20 @@ class Instrument extends React.Component {
 
     const ref = React.createRef();
 
+    const label = (
+      <OverlayTrigger placement="left" trigger="click" overlay={properties && <Properties ref={ref} properties={properties} />}>
+        <span className="instrument-overlay">{state === 'ready' ? properties.name : ''}</span>
+      </OverlayTrigger>
+    );
+
+    const actionButton = (
+      <button type="button" aria-label="Delete" className="delete-instrument" onClick={() => { removeCallback(instrumentId); }}>
+        <FontAwesomeIcon icon={faTimes} />
+      </button>
+    );
+
     return (
-      <div className="row instrument-line">
-        <OverlayTrigger placement="left" trigger="click" overlay={properties && <Properties ref={ref} properties={properties} />}>
-          <div className="col-1 instrument-name">{state === 'ready' ? properties.name : ''}</div>
-        </OverlayTrigger>
-        <div className="col instrument-notes">{elements}</div>
-        <button type="button" aria-label="Delete" className="delete-instrument" onClick={() => { removeCallback(instrumentId); }}><FontAwesomeIcon icon={faTimes} /></button>
-      </div>
+      <Line label={label} elements={elements} actionButton={actionButton} className="instrument-line" />
     );
   }
 }
