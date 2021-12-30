@@ -56,6 +56,8 @@ class Sequencer extends React.Component {
     if (playing) {
       clearInterval(playing);
       this.setState({ playing: 0 });
+      const { audioContext } = this.props;
+      audioContext.suspend();
     } else {
       clearInterval(playing);
       this.setState({
@@ -68,6 +70,8 @@ class Sequencer extends React.Component {
     const { playing } = this.state;
     clearInterval(playing);
     this.setState({ playing: 0, activeNote: -1 });
+    const { audioContext } = this.props;
+    audioContext.suspend();
   };
 
   handleBPMChange = (input) => {
