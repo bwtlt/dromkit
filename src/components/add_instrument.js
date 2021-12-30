@@ -26,7 +26,8 @@ const AddInstrument = function (props) {
       })
       .catch((error) => {
         // handle error
-        console.log(error);
+        // eslint-disable-next-line no-console
+        console.error(error);
       });
   };
 

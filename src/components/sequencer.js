@@ -25,12 +25,12 @@ class Sequencer extends React.Component {
       instruments: [
         {
           id: uuidv4(),
-          name: 'KICK',
+          name: '',
           soundUrl: getSoundUrl('568581'),
         },
         {
           id: uuidv4(),
-          name: 'SNARE',
+          name: '',
           soundUrl: getSoundUrl('131363'),
         },
       ],
