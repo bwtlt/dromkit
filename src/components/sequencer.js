@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import Step from './step';
 import Line from './line';
-import Instrument from './instrument';
+import Instrument from '../classes/instrument';
+import InstrumentComponent from './instrumentcomponent';
 import Transport from './transport_button';
 import AddInstrument from './add_instrument';
 
@@ -14,8 +15,6 @@ const MIN_NB_STEPS = 1;
 const MAX_NB_STEPS = 64;
 const MAX_NB_INSTRUMENTS = 16;
 
-const getSoundUrl = (id) => `https://freesound.org/apiv2/sounds/${id}/`;
-
 class Sequencer extends React.Component {
   constructor(props) {
     super(props);
@@ -25,16 +24,12 @@ class Sequencer extends React.Component {
       playing: 0,
       activeNote: -1,
       instruments: [
-        {
-          id: uuidv4(),
-          name: '',
-          soundUrl: getSoundUrl('568581'),
-        },
-        {
-          id: uuidv4(),
-          name: '',
-          soundUrl: getSoundUrl('131363'),
-        },
+        new Instrument(
+          '',
+          uuidv4(),
+          '568581',
+          NUMBER_OF_NOTES,
+        ),
       ],
     };
   }
@@ -105,6 +100,8 @@ class Sequencer extends React.Component {
       value = MIN_NB_STEPS;
     }
     this.setState({ nbSteps: value });
+    const { instruments } = this.state;
+    instruments.forEach((inst) => inst.setNbSteps(value));
     const { playing, BPM } = this.state;
     if (playing) {
       clearInterval(playing);
@@ -114,10 +111,11 @@ class Sequencer extends React.Component {
 
   addInstrument = (instrument) => {
     const { name, id } = instrument;
+    const { nbSteps } = this.state;
     this.setState((prevState) => ({
       instruments: [
         ...prevState.instruments,
-        { id: uuidv4(), name, soundUrl: getSoundUrl(id) },
+        new Instrument(name, uuidv4(), id, nbSteps),
       ],
     }));
   };
@@ -128,6 +126,13 @@ class Sequencer extends React.Component {
     }));
   };
 
+  loadPattern = () => {
+    const { instruments } = this.state;
+    const instrumentsSlice = instruments.slice();
+    instrumentsSlice.forEach(() => {
+    });
+  }
+
   render() {
     const {
       BPM, playing, activeNote, instruments, nbSteps,
@@ -136,7 +141,7 @@ class Sequencer extends React.Component {
 
     const stepsNumber = (
       <>
-        {[...Array(nbSteps).keys()].map((i) => (<Step className="step-number">{i + 1}</Step>))}
+        {[...Array(nbSteps).keys()].map((i) => (<Step className="step-number" key={i}>{(i + 1).toString()}</Step>))}
       </>
     );
 
@@ -145,7 +150,7 @@ class Sequencer extends React.Component {
         <div className="container-fluid sequencer">
           <Line elements={stepsNumber} />
           {instruments.map((item) => (
-            <Instrument
+            <InstrumentComponent
               key={item.id}
               instrumentId={item.id}
               name={item.name}
@@ -157,6 +162,8 @@ class Sequencer extends React.Component {
               removeCallback={(id) => {
                 this.removeInstrument(id);
               }}
+              notes={item.notes}
+              toggleNote={(n) => { item.toggleNote(n); this.setState({ instruments }); }}
             />
           ))}
           <Transport
@@ -172,6 +179,7 @@ class Sequencer extends React.Component {
             addInstrument={this.addInstrument}
             maxReached={instruments.length >= MAX_NB_INSTRUMENTS}
           />
+          <button type="button" onClick={this.loadPattern}>Load pattern</button>
         </div>
       </div>
     );

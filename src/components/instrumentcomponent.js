@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
@@ -40,15 +39,11 @@ Properties.defaultProps = {
   properties: null,
 };
 
-class Instrument extends React.Component {
+class InstrumentComponent extends React.Component {
   constructor(props) {
-    const { lineLength } = props;
     super(props);
     this.state = {
       properties: null,
-      notes: new Array(lineLength)
-        .fill(null)
-        .map(() => ({ id: uuidv4(), enabled: false })),
       soundBuffer: null,
       state: 'loading',
     };
@@ -81,10 +76,8 @@ class Instrument extends React.Component {
   };
 
   toggle = (n) => {
-    const { notes } = this.state;
-    const notesSlice = notes.slice();
-    notesSlice[n].enabled = !notesSlice[n].enabled;
-    this.setState({ notes: notesSlice });
+    const { toggleNote } = this.props;
+    toggleNote(n);
   };
 
   playSound = () => {
@@ -97,9 +90,9 @@ class Instrument extends React.Component {
   };
 
   render() {
-    const { properties, notes, state } = this.state;
+    const { properties, state } = this.state;
     const {
-      activeNote, nbSteps, removeCallback, instrumentId,
+      activeNote, nbSteps, removeCallback, instrumentId, notes,
     } = this.props;
     if (notes[activeNote]?.enabled) {
       this.playSound();
@@ -149,15 +142,17 @@ class Instrument extends React.Component {
   }
 }
 
-Instrument.propTypes = {
-  lineLength: PropTypes.number.isRequired,
+InstrumentComponent.propTypes = {
   nbSteps: PropTypes.number.isRequired,
   soundUrl: PropTypes.string.isRequired,
   activeNote: PropTypes.number.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
+  notes: PropTypes.array.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   audioContext: PropTypes.object.isRequired,
   removeCallback: PropTypes.func.isRequired,
   instrumentId: PropTypes.string.isRequired,
+  toggleNote: PropTypes.func.isRequired,
 };
 
-export default Instrument;
+export default InstrumentComponent;
