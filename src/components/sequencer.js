@@ -209,6 +209,7 @@ class Sequencer extends React.Component {
                 this.removeInstrument(id);
               }}
               toggleNote={(n) => { item.toggleNote(n); this.setState({ instruments }); }}
+              clearNotesCallback={() => { item.clearNotes(); this.setState({ instruments }); }}
               muteCallback={() => {
                 instruments.forEach((inst) => { inst.setSoloed(false); });
                 item.toggleMute(); this.setState({ instruments });

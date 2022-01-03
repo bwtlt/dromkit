@@ -20,6 +20,10 @@ class Instrument {
     }
   };
 
+  clearNotes = () => {
+    this.notes.forEach((note, i) => { this.setNote(i, false); });
+  }
+
   toggleNote = (n) => {
     this.setNote(n, !this.notes[n].enabled);
   };

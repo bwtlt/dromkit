@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faBroom } from '@fortawesome/free-solid-svg-icons';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
 import Line from './line';
 import Note from './note';
@@ -92,7 +92,7 @@ class InstrumentLine extends React.Component {
   render() {
     const { properties, state } = this.state;
     const {
-      activeNote, nbSteps, removeCallback, item, muteCallback, soloCallback,
+      activeNote, nbSteps, removeCallback, clearNotesCallback, item, muteCallback, soloCallback,
     } = this.props;
     if (!item.muted && item.notes[activeNote]?.enabled) {
       this.playSound();
@@ -138,6 +138,9 @@ class InstrumentLine extends React.Component {
         <button type="button" aria-label="Solo" className={item.soloed ? 'solo-instrument-enabled' : 'solo-instrument'} onClick={() => { soloCallback(); }}>
           S
         </button>
+        <button type="button" aria-label="Clear" className="delete-instrument" onClick={() => { clearNotesCallback(); }}>
+          <FontAwesomeIcon icon={faBroom} />
+        </button>
         <button type="button" aria-label="Delete" className="delete-instrument" onClick={() => { removeCallback(item.id); }}>
           <FontAwesomeIcon icon={faTimes} />
         </button>
@@ -156,6 +159,7 @@ InstrumentLine.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   audioContext: PropTypes.object.isRequired,
   removeCallback: PropTypes.func.isRequired,
+  clearNotesCallback: PropTypes.func.isRequired,
   toggleNote: PropTypes.func.isRequired,
   muteCallback: PropTypes.func.isRequired,
   soloCallback: PropTypes.func.isRequired,
