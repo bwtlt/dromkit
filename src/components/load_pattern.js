@@ -23,7 +23,7 @@ const LoadPattern = function (props) {
 
   return (
     <div className="add-instrument-form">
-      <div>Load a pattern:</div>
+      <h5>Load a pattern:</h5>
       <ListGroup className="found-sound-list">
         {patterns.map(
           (i) => (

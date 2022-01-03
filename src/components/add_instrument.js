@@ -11,9 +11,11 @@ const axios = require('axios');
 const AddInstrument = function (props) {
   const { addInstrument, maxReached } = props;
   const [instruments, setInstruments] = useState([]);
+  const [logs, setLogs] = useState('');
   const target = useRef(null);
 
   const querySounds = async (e) => {
+    setLogs('Loading...');
     e.preventDefault();
     const query = e.target[0].value.replace(/[^a-z0-9áéíóúñü .,_-]/gim, '').trim();
     if (query.length === 0) {
@@ -22,7 +24,13 @@ const AddInstrument = function (props) {
     const url = `https://freesound.org/apiv2/search/text/?query=${query}&fields=id,name&token=${process.env.REACT_APP_FREESOUND_APIKEY}`;
     await axios.get(url)
       .then((response) => {
-        setInstruments(response.data.results);
+        if (response.data.results.length === 0) {
+          setLogs(`No instruments found for ${query}`);
+          setInstruments([]);
+        } else {
+          setLogs(`${response.data.results.length} instruments found`);
+          setInstruments(response.data.results);
+        }
       })
       .catch((error) => {
         // handle error
@@ -38,7 +46,7 @@ const AddInstrument = function (props) {
 
   return (
     <Form onSubmit={querySounds} className="add-instrument-form">
-      <div>Add an instrument:</div>
+      <h5>Add an instrument:</h5>
       <InputGroup>
         <FormControl
           placeholder="Search instruments..."
@@ -46,7 +54,7 @@ const AddInstrument = function (props) {
           aria-describedby="basic-addon2"
         />
         {instruments.length > 0 && (
-          <Button variant="outline-secondary" id="button-addon2" ref={target} onClick={() => setInstruments([])}>
+          <Button variant="outline-secondary" id="button-addon2" ref={target} onClick={() => { setLogs(''); setInstruments([]); }}>
             Clear
           </Button>
         )}
@@ -65,6 +73,9 @@ const AddInstrument = function (props) {
           </Tooltip>
         </Overlay>
       </InputGroup>
+      <div>
+        {logs}
+      </div>
       {instruments && (
         <ListGroup className="found-sound-list">
           {instruments.slice(0, 10).map(

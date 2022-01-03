@@ -54,9 +54,9 @@ class InstrumentLine extends React.Component {
   }
 
   load = async () => {
-    const { audioContext, soundUrl } = this.props;
+    const { audioContext, item } = this.props;
     // Make a request for a user with a given ID
-    const url = `${soundUrl}?token=${process.env.REACT_APP_FREESOUND_APIKEY}`;
+    const url = `${item.soundUrl}?token=${process.env.REACT_APP_FREESOUND_APIKEY}`;
     await axios.get(url)
       .then(async (response) => {
         this.setState({ properties: response.data });
@@ -92,10 +92,9 @@ class InstrumentLine extends React.Component {
   render() {
     const { properties, state } = this.state;
     const {
-      activeNote, nbSteps, removeCallback, instrumentId, notes,
-      muted, soloed, muteCallback, soloCallback,
+      activeNote, nbSteps, removeCallback, item, muteCallback, soloCallback,
     } = this.props;
-    if (!muted && notes[activeNote]?.enabled) {
+    if (!item.muted && item.notes[activeNote]?.enabled) {
       this.playSound();
     }
     let elements;
@@ -106,7 +105,7 @@ class InstrumentLine extends React.Component {
       case 'ready':
         elements = (
           <>
-            {notes.slice(0, nbSteps).map((note, i) => (
+            {item.notes.slice(0, nbSteps).map((note, i) => (
               <Note
                 key={note.id}
                 active={activeNote === i}
@@ -133,13 +132,13 @@ class InstrumentLine extends React.Component {
 
     const actionButtons = (
       <>
-        <button type="button" aria-label="Mute" className={muted ? 'mute-instrument-enabled' : 'mute-instrument'} onClick={() => { muteCallback(); }}>
+        <button type="button" aria-label="Mute" className={item.muted ? 'mute-instrument-enabled' : 'mute-instrument'} onClick={() => { muteCallback(); }}>
           M
         </button>
-        <button type="button" aria-label="Solo" className={soloed ? 'solo-instrument-enabled' : 'solo-instrument'} onClick={() => { soloCallback(); }}>
+        <button type="button" aria-label="Solo" className={item.soloed ? 'solo-instrument-enabled' : 'solo-instrument'} onClick={() => { soloCallback(); }}>
           S
         </button>
-        <button type="button" aria-label="Delete" className="delete-instrument" onClick={() => { removeCallback(instrumentId); }}>
+        <button type="button" aria-label="Delete" className="delete-instrument" onClick={() => { removeCallback(item.id); }}>
           <FontAwesomeIcon icon={faTimes} />
         </button>
       </>
@@ -153,19 +152,15 @@ class InstrumentLine extends React.Component {
 
 InstrumentLine.propTypes = {
   nbSteps: PropTypes.number.isRequired,
-  soundUrl: PropTypes.string.isRequired,
   activeNote: PropTypes.number.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  notes: PropTypes.array.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   audioContext: PropTypes.object.isRequired,
   removeCallback: PropTypes.func.isRequired,
-  instrumentId: PropTypes.string.isRequired,
   toggleNote: PropTypes.func.isRequired,
-  muted: PropTypes.bool.isRequired,
-  soloed: PropTypes.bool.isRequired,
   muteCallback: PropTypes.func.isRequired,
   soloCallback: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  item: PropTypes.object.isRequired,
 };
 
 export default InstrumentLine;

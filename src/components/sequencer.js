@@ -144,11 +144,15 @@ class Sequencer extends React.Component {
 
   addInstrument = (instrument) => {
     const { name, id } = instrument;
-    const { nbSteps } = this.state;
+    const { nbSteps, instruments } = this.state;
+    const inst = new Instrument(name, uuidv4(), id, nbSteps);
+    if (instruments.some((i) => i.soloed)) {
+      inst.muted = true;
+    }
     this.setState((prevState) => ({
       instruments: [
         ...prevState.instruments,
-        new Instrument(name, uuidv4(), id, nbSteps),
+        inst,
       ],
     }));
   };
@@ -195,20 +199,16 @@ class Sequencer extends React.Component {
           {instruments.map((item) => (
             <InstrumentLine
               key={item.id}
-              instrumentId={item.id}
               name={item.name}
+              item={item}
               activeNote={activeNote}
               nbSteps={nbSteps}
               lineLength={MAX_NB_STEPS}
               audioContext={audioContext}
-              soundUrl={item.soundUrl}
               removeCallback={(id) => {
                 this.removeInstrument(id);
               }}
-              notes={item.notes}
               toggleNote={(n) => { item.toggleNote(n); this.setState({ instruments }); }}
-              muted={item.muted}
-              soloed={item.soloed}
               muteCallback={() => {
                 instruments.forEach((inst) => { inst.setSoloed(false); });
                 item.toggleMute(); this.setState({ instruments });
