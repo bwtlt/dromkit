@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
+import * as Realm from 'realm-web';
 import Step from './step';
 import Line from './line';
 import Instrument from '../classes/instrument';
@@ -15,25 +16,6 @@ const MAX_BPM = 300;
 const MIN_NB_STEPS = 1;
 const MAX_NB_STEPS = 64;
 const MAX_NB_INSTRUMENTS = 16;
-
-const FACTORY_PATTERNS = [
-  {
-    name: 'Empty',
-    steps: [
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ],
-  },
-  {
-    name: 'Dummy',
-    steps: [
-      [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0],
-      [1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
-      [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
-    ],
-  },
-];
 
 class Sequencer extends React.Component {
   constructor(props) {
@@ -63,8 +45,17 @@ class Sequencer extends React.Component {
           NUMBER_OF_NOTES,
         ),
       ],
-      patterns: FACTORY_PATTERNS,
+      patterns: [],
+      app: new Realm.App({ id: 'application-0-aayfa' }),
     };
+  }
+
+  async componentDidMount() {
+    const { app } = this.state;
+    await app.logIn(Realm.Credentials.anonymous());
+    const client = app.currentUser.mongoClient('mongodb-atlas');
+    const rests = client.db('patterns').collection('patterns');
+    this.setState({ patterns: (await rests.find()).slice(0, 10) });
   }
 
   play = (BPM) => {
@@ -175,7 +166,7 @@ class Sequencer extends React.Component {
     const { instruments, patterns } = this.state;
     const pattern = { name };
     pattern.steps = instruments.map((inst) => (
-      inst.notes.map((note) => (note.enabled ? 1 : 0))
+      inst.notes.map((note) => (note.enabled))
     ));
     this.setState({ patterns: [...patterns, pattern] });
   }
