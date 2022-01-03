@@ -16,6 +16,25 @@ const MIN_NB_STEPS = 1;
 const MAX_NB_STEPS = 64;
 const MAX_NB_INSTRUMENTS = 16;
 
+const FACTORY_PATTERNS = [
+  {
+    name: 'Empty',
+    steps: [
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ],
+  },
+  {
+    name: 'Dummy',
+    steps: [
+      [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0],
+      [1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+      [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+    ],
+  },
+];
+
 class Sequencer extends React.Component {
   constructor(props) {
     super(props);
@@ -44,6 +63,7 @@ class Sequencer extends React.Component {
           NUMBER_OF_NOTES,
         ),
       ],
+      patterns: FACTORY_PATTERNS,
     };
   }
 
@@ -147,9 +167,18 @@ class Sequencer extends React.Component {
     this.setState({ instruments });
   }
 
+  savePattern = (name) => {
+    const { instruments, patterns } = this.state;
+    const pattern = { name };
+    pattern.steps = instruments.map((inst) => (
+      inst.notes.map((note) => (note.enabled ? 1 : 0))
+    ));
+    this.setState({ patterns: [...patterns, pattern] });
+  }
+
   render() {
     const {
-      BPM, playing, activeNote, instruments, nbSteps,
+      BPM, playing, activeNote, instruments, nbSteps, patterns,
     } = this.state;
     const { audioContext } = this.props;
 
@@ -210,7 +239,9 @@ class Sequencer extends React.Component {
             maxReached={instruments.length >= MAX_NB_INSTRUMENTS}
           />
           <LoadPattern
-            loadPattern={this.loadPattern}
+            loadPatternCallback={this.loadPattern}
+            savePatternCallback={this.savePattern}
+            patterns={patterns}
           />
         </div>
       </div>

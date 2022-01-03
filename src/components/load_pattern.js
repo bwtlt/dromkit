@@ -1,40 +1,28 @@
-import { React } from 'react';
+import { React, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  Form, ListGroup,
+  Form, ListGroup, InputGroup, Button, FormControl,
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-const patterns = [
-  {
-    name: 'Dummy',
-    steps: [
-      [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0],
-      [1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
-      [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
-    ],
-  },
-  {
-    name: 'Empty',
-    steps: [
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ],
-  },
-];
-
 const LoadPattern = function (props) {
-  const { loadPattern } = props;
+  const { loadPatternCallback, savePatternCallback, patterns } = props;
+  const target = useRef(null);
 
   const handleClick = (pattern) => {
-    loadPattern(pattern);
+    loadPatternCallback(pattern);
+  };
+
+  const savePattern = (e) => {
+    e.preventDefault();
+    const patternName = e.target[0].value.replace(/[^a-z0-9áéíóúñü .,_-]/gim, '').trim();
+    savePatternCallback(patternName);
   };
 
   return (
-    <Form className="add-instrument-form">
+    <div className="add-instrument-form">
       <div>Load a pattern:</div>
       <ListGroup className="found-sound-list">
         {patterns.map(
@@ -54,12 +42,32 @@ const LoadPattern = function (props) {
           ),
         )}
       </ListGroup>
-    </Form>
+      <Form onSubmit={savePattern} className="add-instrument-form">
+        <InputGroup>
+          <FormControl
+            placeholder="Enter pattern name"
+            aria-label="Pattern name"
+            aria-describedby="basic-addon2"
+          />
+          <Button
+            variant="outline-secondary"
+            id="button-addon2"
+            type="submit"
+            ref={target}
+          >
+            Save pattern
+          </Button>
+        </InputGroup>
+      </Form>
+    </div>
   );
 };
 
 LoadPattern.propTypes = {
-  loadPattern: PropTypes.func.isRequired,
+  loadPatternCallback: PropTypes.func.isRequired,
+  savePatternCallback: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  patterns: PropTypes.array.isRequired,
 };
 
 export default LoadPattern;
