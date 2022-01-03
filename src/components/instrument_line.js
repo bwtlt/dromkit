@@ -39,7 +39,7 @@ Properties.defaultProps = {
   properties: null,
 };
 
-class InstrumentComponent extends React.Component {
+class InstrumentLine extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -93,8 +93,9 @@ class InstrumentComponent extends React.Component {
     const { properties, state } = this.state;
     const {
       activeNote, nbSteps, removeCallback, instrumentId, notes,
+      muted, soloed, muteCallback, soloCallback,
     } = this.props;
-    if (notes[activeNote]?.enabled) {
+    if (!muted && notes[activeNote]?.enabled) {
       this.playSound();
     }
     let elements;
@@ -130,19 +131,27 @@ class InstrumentComponent extends React.Component {
       </OverlayTrigger>
     );
 
-    const actionButton = (
-      <button type="button" aria-label="Delete" className="delete-instrument" onClick={() => { removeCallback(instrumentId); }}>
-        <FontAwesomeIcon icon={faTimes} />
-      </button>
+    const actionButtons = (
+      <>
+        <button type="button" aria-label="Mute" className={muted ? 'mute-instrument-enabled' : 'mute-instrument'} onClick={() => { muteCallback(); }}>
+          M
+        </button>
+        <button type="button" aria-label="Solo" className={soloed ? 'solo-instrument-enabled' : 'solo-instrument'} onClick={() => { soloCallback(); }}>
+          S
+        </button>
+        <button type="button" aria-label="Delete" className="delete-instrument" onClick={() => { removeCallback(instrumentId); }}>
+          <FontAwesomeIcon icon={faTimes} />
+        </button>
+      </>
     );
 
     return (
-      <Line label={label} elements={elements} actionButton={actionButton} className="instrument-line" />
+      <Line label={label} elements={elements} actions={actionButtons} className="instrument-line" />
     );
   }
 }
 
-InstrumentComponent.propTypes = {
+InstrumentLine.propTypes = {
   nbSteps: PropTypes.number.isRequired,
   soundUrl: PropTypes.string.isRequired,
   activeNote: PropTypes.number.isRequired,
@@ -153,6 +162,10 @@ InstrumentComponent.propTypes = {
   removeCallback: PropTypes.func.isRequired,
   instrumentId: PropTypes.string.isRequired,
   toggleNote: PropTypes.func.isRequired,
+  muted: PropTypes.bool.isRequired,
+  soloed: PropTypes.bool.isRequired,
+  muteCallback: PropTypes.func.isRequired,
+  soloCallback: PropTypes.func.isRequired,
 };
 
-export default InstrumentComponent;
+export default InstrumentLine;

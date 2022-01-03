@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Step from './step';
 import Line from './line';
 import Instrument from '../classes/instrument';
-import InstrumentComponent from './instrumentcomponent';
+import InstrumentLine from './instrument_line';
 import Transport from './transport_button';
 import AddInstrument from './add_instrument';
 import LoadPattern from './load_pattern';
@@ -34,13 +34,13 @@ class Sequencer extends React.Component {
         new Instrument(
           '',
           uuidv4(),
-          '568581',
+          '529378',
           NUMBER_OF_NOTES,
         ),
         new Instrument(
           '',
           uuidv4(),
-          '568581',
+          '332367',
           NUMBER_OF_NOTES,
         ),
       ],
@@ -164,7 +164,7 @@ class Sequencer extends React.Component {
         <div className="container-fluid sequencer">
           <Line elements={stepsNumber} />
           {instruments.map((item) => (
-            <InstrumentComponent
+            <InstrumentLine
               key={item.id}
               instrumentId={item.id}
               name={item.name}
@@ -178,6 +178,22 @@ class Sequencer extends React.Component {
               }}
               notes={item.notes}
               toggleNote={(n) => { item.toggleNote(n); this.setState({ instruments }); }}
+              muted={item.muted}
+              soloed={item.soloed}
+              muteCallback={() => {
+                instruments.forEach((inst) => { inst.setSoloed(false); });
+                item.toggleMute(); this.setState({ instruments });
+              }}
+              soloCallback={() => {
+                if (item.soloed) {
+                  instruments.forEach((inst) => { inst.unmute(); inst.setSoloed(false); });
+                } else {
+                  instruments.forEach((inst) => { inst.mute(); inst.setSoloed(false); });
+                  item.toggleSolo();
+                  item.unmute();
+                }
+                this.setState({ instruments });
+              }}
             />
           ))}
           <Transport

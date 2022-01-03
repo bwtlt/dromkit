@@ -11,7 +11,7 @@ class Line extends React.Component {
 
   render() {
     const {
-      label, elements, actionButton, className,
+      label, elements, actions, className,
     } = this.props;
 
     const classNames = `row sequencer-line ${className}`;
@@ -21,7 +21,7 @@ class Line extends React.Component {
       <div className={classNames}>
         <div className="col instrument-name">{label}</div>
         <div className="col-md-auto instrument-notes">{elements}</div>
-        <div className="col">{actionButton}</div>
+        <div className="col instrument-actions">{actions}</div>
       </div>
     );
   }
@@ -30,14 +30,14 @@ class Line extends React.Component {
 Line.propTypes = {
   label: PropTypes.object,
   elements: PropTypes.object,
-  actionButton: PropTypes.object,
+  actions: PropTypes.object,
   className: PropTypes.string,
 };
 
 Line.defaultProps = {
   label: null,
   elements: null,
-  actionButton: null,
+  actions: null,
   className: '',
 };
 

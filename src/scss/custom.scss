@@ -171,6 +171,13 @@ code {
   justify-content: center;
 }
 
+.instrument-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
 .instrument-name {
   font-family: Roboto;
   font-style: normal;
@@ -205,7 +212,7 @@ code {
   height: 50px;
 }
 
-.delete-instrument {
+.instrument-action {
   width: 30px;
   height: 30px;
   padding: 6px 0px;
@@ -215,6 +222,36 @@ code {
   margin-right: 3px;
   border-style: none;
   color: colors.get(neutrals, grey-900);
+}
+
+.delete-instrument {
+  @extend .instrument-action;
+}
+
+.mute-instrument, .solo-instrument {
+  @extend .instrument-action;
+  font-weight: 700;
+}
+
+.solo-instrument-enabled {
+  @extend .instrument-action;
+  color: colors.get(neutrals, grey-050);
+  background-color: colors.get(primary, teal-vivid-800);
+}
+
+.mute-instrument-enabled {
+  @extend .instrument-action;
+  color: colors.get(neutrals, grey-050);
+  background-color: colors.get(supporting, yellow-vivid-400);
+}
+
+.solo-instrument-enabled:hover,
+.mute-instrument-enabled:hover,
+.solo-instrument:hover,
+.mute-instrument:hover
+{
+  color: colors.get(neutrals, grey-050);
+  background-color: colors.get(neutrals, grey-700);
 }
 
 .delete-instrument:hover {

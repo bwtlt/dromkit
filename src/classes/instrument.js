@@ -8,6 +8,8 @@ class Instrument {
     this.id = id;
     this.soundUrl = getSoundUrl(soundId);
     this.notes = new Array(nbSteps).fill(null).map(() => ({ id: uuidv4(), enabled: false }));
+    this.muted = false;
+    this.soloed = false;
   }
 
   setNote = (n, value) => {
@@ -29,6 +31,26 @@ class Instrument {
         .fill(null)
         .map(() => ({ id: uuidv4(), enabled: false }))];
   };
+
+  toggleSolo = () => {
+    this.soloed = !this.soloed;
+  }
+
+  toggleMute = () => {
+    this.muted = !this.muted;
+  }
+
+  mute = () => {
+    this.muted = true;
+  }
+
+  unmute = () => {
+    this.muted = false;
+  }
+
+  setSoloed = (value) => {
+    this.soloed = value;
+  }
 }
 
 export default Instrument;
