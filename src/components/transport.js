@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form, InputGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -40,6 +40,7 @@ const Transport = function (props) {
     <div className="transport">
       <TransportButton btnType={playing ? 'pause' : 'play'} enabled={playing} onClick={play} />
       <TransportButton btnType="stop" enabled={0} onClick={stop} />
+      <TapTempo setBPMCallback={(value) => { handleBPMCallback(value); }} />
       <InputGroup
         className="param-input"
       >
@@ -111,6 +112,49 @@ TransportButton.propTypes = {
   enabled: PropTypes.number.isRequired,
   btnType: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
+};
+
+const TapTempo = function (props) {
+  const [timeStamps, setTimeStamps] = useState([]);
+  const { setBPMCallback } = props;
+
+  const onClick = () => {
+    const averageDelta = ([x, ...xs]) => {
+      if (x === undefined) {
+        return NaN;
+      }
+      return (
+        xs.reduce(([acc, last], a) => [acc + (a - last), a], [0, x])[0] / xs.length
+      );
+    };
+    const now = Date.now();
+    const delta = now - timeStamps.at(-1);
+    if (!timeStamps || delta > 2000) {
+      // start over
+      setTimeStamps([now]);
+    } else {
+      if (timeStamps.length >= 2) {
+        const average = averageDelta(timeStamps);
+        const BPM = Math.round(60000 / average);
+        setBPMCallback(BPM);
+      }
+      setTimeStamps([...timeStamps, now]);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="transport-btn"
+    >
+      TAP
+    </button>
+  );
+};
+
+TapTempo.propTypes = {
+  setBPMCallback: PropTypes.func.isRequired,
 };
 
 export default Transport;
