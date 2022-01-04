@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
 import * as Realm from 'realm-web';
 import Step from './step';
+import SoundSource from '../classes/sound_source';
 import Line from './line';
-import Instrument from '../classes/instrument';
-import InstrumentLine from './instrument_line';
+import Steps from './steps';
+import Track from './track';
 import Transport from './transport';
 import AddInstrument from './add_instrument';
 import LoadPattern from './load_pattern';
@@ -20,24 +20,18 @@ class Sequencer extends React.Component {
       playing: 0,
       activeNote: -1,
       instruments: [
-        new Instrument(
-          '',
-          uuidv4(),
-          '568581',
-          Definitions.NUMBER_OF_NOTES,
-        ),
-        new Instrument(
-          '',
-          uuidv4(),
-          '529378',
-          Definitions.NUMBER_OF_NOTES,
-        ),
-        new Instrument(
-          '',
-          uuidv4(),
-          '332367',
-          Definitions.NUMBER_OF_NOTES,
-        ),
+        {
+          source: new SoundSource('568581'),
+          steps: new Steps(),
+        },
+        {
+          source: new SoundSource('528870'),
+          steps: new Steps(),
+        },
+        {
+          source: new SoundSource('332367'),
+          steps: new Steps(),
+        },
       ],
       patterns: [],
       app: new Realm.App({ id: 'application-0-aayfa' }),
@@ -101,7 +95,7 @@ class Sequencer extends React.Component {
   handleStepsChange = (value) => {
     this.setState({ nbSteps: value });
     const { instruments } = this.state;
-    instruments.forEach((inst) => inst.setNbSteps(value));
+    instruments.forEach((inst) => inst.steps.setNbSteps(value));
     const { playing, BPM } = this.state;
     if (playing) {
       clearInterval(playing);
@@ -110,11 +104,15 @@ class Sequencer extends React.Component {
   };
 
   addInstrument = (instrument) => {
-    const { name, id } = instrument;
+    const { id } = instrument;
     const { nbSteps, instruments } = this.state;
-    const inst = new Instrument(name, uuidv4(), id, nbSteps);
-    if (instruments.some((i) => i.soloed)) {
-      inst.muted = true;
+    const inst = {
+      source: new SoundSource(id),
+      steps: new Steps(),
+    };
+    inst.steps.setNbSteps(nbSteps);
+    if (instruments.some((i) => i.source.soloed)) {
+      inst.source.muted = true;
     }
     this.setState((prevState) => ({
       instruments: [
@@ -126,14 +124,14 @@ class Sequencer extends React.Component {
 
   removeInstrument = (e) => {
     this.setState((prevState) => ({
-      instruments: prevState.instruments.filter((inst) => inst.id !== e),
+      instruments: prevState.instruments.filter((inst) => inst.steps.id !== e),
     }));
   };
 
   loadPattern = (pattern) => {
     const { instruments } = this.state;
     pattern.forEach((line, i) => {
-      instruments[i]?.notes.forEach((note, j) => instruments[i].setNote(j, line[j]));
+      instruments[i]?.steps.notes.forEach((note, j) => instruments[i].steps.setNote(j, line[j]));
     });
     this.setState({ instruments });
   }
@@ -164,7 +162,7 @@ class Sequencer extends React.Component {
         <div className="container-fluid sequencer">
           <Line elements={stepsNumber} />
           {instruments.map((item) => (
-            <InstrumentLine
+            <Track
               key={item.id}
               name={item.name}
               item={item}
@@ -175,19 +173,25 @@ class Sequencer extends React.Component {
               removeCallback={(id) => {
                 this.removeInstrument(id);
               }}
-              toggleNote={(n) => { item.toggleNote(n); this.setState({ instruments }); }}
-              clearNotesCallback={() => { item.clearNotes(); this.setState({ instruments }); }}
+              toggleNote={(n) => { item.steps.toggleNote(n); this.setState({ instruments }); }}
+              clearNotesCallback={() => {
+                item.steps.clearNotes(); this.setState({ instruments });
+              }}
               muteCallback={() => {
-                instruments.forEach((inst) => { inst.setSoloed(false); });
-                item.toggleMute(); this.setState({ instruments });
+                instruments.forEach((inst) => { inst.source.setSoloed(false); });
+                item.source.toggleMute(); this.setState({ instruments });
               }}
               soloCallback={() => {
-                if (item.soloed) {
-                  instruments.forEach((inst) => { inst.unmute(); inst.setSoloed(false); });
+                if (item.source.soloed) {
+                  instruments.forEach((inst) => {
+                    inst.source.unmute(); inst.source.setSoloed(false);
+                  });
                 } else {
-                  instruments.forEach((inst) => { inst.mute(); inst.setSoloed(false); });
-                  item.toggleSolo();
-                  item.unmute();
+                  instruments.forEach((inst) => {
+                    inst.source.mute(); inst.source.setSoloed(false);
+                  });
+                  item.source.toggleSolo();
+                  item.source.unmute();
                 }
                 this.setState({ instruments });
               }}
@@ -205,7 +209,7 @@ class Sequencer extends React.Component {
             handleStepsCallback={this.handleStepsChange}
             clearCallback={() => {
               instruments.forEach((inst) => {
-                inst.clearNotes();
+                inst.steps.clearNotes();
               });
               this.setState({ instruments });
             }}

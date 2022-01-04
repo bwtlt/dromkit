@@ -39,7 +39,7 @@ Properties.defaultProps = {
   properties: null,
 };
 
-class InstrumentLine extends React.Component {
+class Track extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -56,7 +56,7 @@ class InstrumentLine extends React.Component {
   load = async () => {
     const { audioContext, item } = this.props;
     // Make a request for a user with a given ID
-    const url = `${item.soundUrl}?token=${process.env.REACT_APP_FREESOUND_APIKEY}`;
+    const url = `${item.source.soundUrl}?token=${process.env.REACT_APP_FREESOUND_APIKEY}`;
     await axios.get(url)
       .then(async (response) => {
         this.setState({ properties: response.data });
@@ -94,7 +94,7 @@ class InstrumentLine extends React.Component {
     const {
       activeNote, nbSteps, removeCallback, clearNotesCallback, item, muteCallback, soloCallback,
     } = this.props;
-    if (!item.muted && item.notes[activeNote]?.enabled) {
+    if (!item.source.muted && item.steps.notes[activeNote]?.enabled) {
       this.playSound();
     }
     let elements;
@@ -105,7 +105,7 @@ class InstrumentLine extends React.Component {
       case 'ready':
         elements = (
           <>
-            {item.notes.slice(0, nbSteps).map((note, i) => (
+            {item.steps.notes.slice(0, nbSteps).map((note, i) => (
               <Note
                 key={note.id}
                 active={activeNote === i}
@@ -132,16 +132,16 @@ class InstrumentLine extends React.Component {
 
     const actionButtons = (
       <>
-        <button type="button" aria-label="Mute" className={item.muted ? 'mute-instrument-enabled' : 'mute-instrument'} onClick={() => { muteCallback(); }}>
+        <button type="button" aria-label="Mute" className={item.source.muted ? 'mute-instrument-enabled' : 'mute-instrument'} onClick={() => { muteCallback(); }}>
           M
         </button>
-        <button type="button" aria-label="Solo" className={item.soloed ? 'solo-instrument-enabled' : 'solo-instrument'} onClick={() => { soloCallback(); }}>
+        <button type="button" aria-label="Solo" className={item.source.soloed ? 'solo-instrument-enabled' : 'solo-instrument'} onClick={() => { soloCallback(); }}>
           S
         </button>
         <button type="button" aria-label="Clear" className="delete-instrument" onClick={() => { clearNotesCallback(); }}>
           <FontAwesomeIcon icon={faBroom} />
         </button>
-        <button type="button" aria-label="Delete" className="delete-instrument" onClick={() => { removeCallback(item.id); }}>
+        <button type="button" aria-label="Delete" className="delete-instrument" onClick={() => { removeCallback(item.steps.id); }}>
           <FontAwesomeIcon icon={faTimes} />
         </button>
       </>
@@ -153,7 +153,7 @@ class InstrumentLine extends React.Component {
   }
 }
 
-InstrumentLine.propTypes = {
+Track.propTypes = {
   nbSteps: PropTypes.number.isRequired,
   activeNote: PropTypes.number.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
@@ -167,4 +167,4 @@ InstrumentLine.propTypes = {
   item: PropTypes.object.isRequired,
 };
 
-export default InstrumentLine;
+export default Track;
