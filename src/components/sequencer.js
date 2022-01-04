@@ -6,23 +6,17 @@ import Step from './step';
 import Line from './line';
 import Instrument from '../classes/instrument';
 import InstrumentLine from './instrument_line';
-import Transport from './transport_button';
+import Transport from './transport';
 import AddInstrument from './add_instrument';
 import LoadPattern from './load_pattern';
-
-const NUMBER_OF_NOTES = 16;
-const MIN_BPM = 1;
-const MAX_BPM = 300;
-const MIN_NB_STEPS = 1;
-const MAX_NB_STEPS = 64;
-const MAX_NB_INSTRUMENTS = 16;
+import * as Definitions from '../definitions';
 
 class Sequencer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      BPM: 120,
-      nbSteps: NUMBER_OF_NOTES,
+      BPM: Definitions.DEFAULT_BPM,
+      nbSteps: Definitions.NUMBER_OF_NOTES,
       playing: 0,
       activeNote: -1,
       instruments: [
@@ -30,19 +24,19 @@ class Sequencer extends React.Component {
           '',
           uuidv4(),
           '568581',
-          NUMBER_OF_NOTES,
+          Definitions.NUMBER_OF_NOTES,
         ),
         new Instrument(
           '',
           uuidv4(),
           '529378',
-          NUMBER_OF_NOTES,
+          Definitions.NUMBER_OF_NOTES,
         ),
         new Instrument(
           '',
           uuidv4(),
           '332367',
-          NUMBER_OF_NOTES,
+          Definitions.NUMBER_OF_NOTES,
         ),
       ],
       patterns: [],
@@ -95,16 +89,7 @@ class Sequencer extends React.Component {
     audioContext.suspend();
   };
 
-  handleBPMChange = (input) => {
-    let value = parseInt(input, 10);
-    if (Number.isNaN(value)) {
-      value = 0;
-    }
-    if (value > MAX_BPM) {
-      value = MAX_BPM;
-    } else if (value < MIN_BPM) {
-      value = MIN_BPM;
-    }
+  handleBPMChange = (value) => {
     this.setState({ BPM: value });
     const { playing } = this.state;
     if (playing) {
@@ -113,16 +98,7 @@ class Sequencer extends React.Component {
     }
   };
 
-  handleStepsChange = (input) => {
-    let value = parseInt(input, 10);
-    if (Number.isNaN(value)) {
-      value = MIN_NB_STEPS;
-    }
-    if (value > MAX_NB_STEPS) {
-      value = MAX_NB_STEPS;
-    } else if (value < MIN_NB_STEPS) {
-      value = MIN_NB_STEPS;
-    }
+  handleStepsChange = (value) => {
     this.setState({ nbSteps: value });
     const { instruments } = this.state;
     instruments.forEach((inst) => inst.setNbSteps(value));
@@ -194,7 +170,7 @@ class Sequencer extends React.Component {
               item={item}
               activeNote={activeNote}
               nbSteps={nbSteps}
-              lineLength={MAX_NB_STEPS}
+              lineLength={Definitions.MAX_NB_STEPS}
               audioContext={audioContext}
               removeCallback={(id) => {
                 this.removeInstrument(id);
@@ -217,6 +193,8 @@ class Sequencer extends React.Component {
               }}
             />
           ))}
+        </div>
+        <div className="container-fluid sequencer-controls">
           <Transport
             playing={playing}
             play={this.toggle}
@@ -228,7 +206,7 @@ class Sequencer extends React.Component {
           />
           <AddInstrument
             addInstrument={this.addInstrument}
-            maxReached={instruments.length >= MAX_NB_INSTRUMENTS}
+            maxReached={instruments.length >= Definitions.MAX_NB_INSTRUMENTS}
           />
           <LoadPattern
             loadPatternCallback={this.loadPattern}

@@ -19,7 +19,7 @@ class Line extends React.Component {
     return (
       // eslint-disable-next-line react/jsx-props-no-spreading
       <div className={classNames}>
-        <div className="col instrument-name">{label}</div>
+        <div className="col col-2 instrument-name">{label}</div>
         <div className="col-md-auto instrument-notes">{elements}</div>
         <div className="col instrument-actions">{actions}</div>
       </div>

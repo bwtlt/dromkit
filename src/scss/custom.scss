@@ -44,6 +44,17 @@ code {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  align-items: stretch;
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 40px;
+}
+
+.sequencer-controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   align-items: center;
   width: max-content;
   margin-left: auto;
@@ -142,10 +153,11 @@ code {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
   padding: 7px;
   margin: 7px;
   border-radius: 15px;
-  width: auto;
   max-height: 44px;
 }
 
@@ -188,7 +200,6 @@ code {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 6em;
   color: colors.get(primary, teal-vivid-900);
 }
 

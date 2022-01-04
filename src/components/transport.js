@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, InputGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause, faStop } from '@fortawesome/free-solid-svg-icons';
+import * as Definitions from '../definitions';
 
 const Transport = function (props) {
   const {
@@ -10,11 +11,29 @@ const Transport = function (props) {
   } = props;
 
   const handleBPMChange = (e) => {
-    handleBPMCallback(e.target.value);
+    let value = parseInt(e.target.value, 10);
+    if (Number.isNaN(value)) {
+      value = 0;
+    }
+    if (value > Definitions.MAX_BPM) {
+      value = Definitions.MAX_BPM;
+    } else if (value < Definitions.MIN_BPM) {
+      value = Definitions.MIN_BPM;
+    }
+    handleBPMCallback(value);
   };
 
   const handleStepsChange = (e) => {
-    handleStepsCallback(e.target.value);
+    let value = parseInt(e.target.value, 10);
+    if (Number.isNaN(value)) {
+      value = Definitions.MIN_NB_STEPS;
+    }
+    if (value > Definitions.MAX_NB_STEPS) {
+      value = Definitions.MAX_NB_STEPS;
+    } else if (value < Definitions.MIN_NB_STEPS) {
+      value = Definitions.MIN_NB_STEPS;
+    }
+    handleStepsCallback(value);
   };
 
   return (
@@ -29,7 +48,7 @@ const Transport = function (props) {
           name="BPM"
           type="number"
           maxLength="3"
-          defaultValue={BPM}
+          value={BPM}
           onChange={handleBPMChange}
         />
         <InputGroup.Text>BPM</InputGroup.Text>
@@ -42,7 +61,7 @@ const Transport = function (props) {
           name="Steps"
           type="number"
           maxLength="3"
-          defaultValue={steps}
+          value={steps}
           onChange={handleStepsChange}
         />
         <InputGroup.Text>steps</InputGroup.Text>
