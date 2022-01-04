@@ -99,6 +99,15 @@ code {
   background-color: colors.get(primary, teal-vivid-700);
 }
 
+.transport-btn-red {
+  @extend .transport-btn;
+}
+
+.transport-btn-red:hover {
+  color: colors.get(neutrals, grey-050);
+  background-color: colors.get(supporting, red-vivid-800);
+}
+
 .transport-btn-enabled {
   width: 50px;
   height: 50px;

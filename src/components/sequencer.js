@@ -203,6 +203,12 @@ class Sequencer extends React.Component {
             BPM={BPM}
             handleBPMCallback={this.handleBPMChange}
             handleStepsCallback={this.handleStepsChange}
+            clearCallback={() => {
+              instruments.forEach((inst) => {
+                inst.clearNotes();
+              });
+              this.setState({ instruments });
+            }}
           />
           <AddInstrument
             addInstrument={this.addInstrument}

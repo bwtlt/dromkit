@@ -2,12 +2,14 @@ import { React, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form, InputGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faPause, faStop } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPlay, faPause, faStop, faBroom,
+} from '@fortawesome/free-solid-svg-icons';
 import * as Definitions from '../definitions';
 
 const Transport = function (props) {
   const {
-    playing, play, stop, BPM, steps, handleBPMCallback, handleStepsCallback,
+    playing, play, stop, BPM, steps, handleBPMCallback, handleStepsCallback, clearCallback,
   } = props;
 
   const handleBPMChange = (e) => {
@@ -67,6 +69,13 @@ const Transport = function (props) {
         />
         <InputGroup.Text>steps</InputGroup.Text>
       </InputGroup>
+      <button
+        type="button"
+        onClick={clearCallback}
+        className="transport-btn-red"
+      >
+        <FontAwesomeIcon icon={faBroom} />
+      </button>
     </div>
   );
 };
@@ -79,6 +88,7 @@ Transport.propTypes = {
   steps: PropTypes.number.isRequired,
   handleBPMCallback: PropTypes.func.isRequired,
   handleStepsCallback: PropTypes.func.isRequired,
+  clearCallback: PropTypes.func.isRequired,
 };
 
 const getIcon = (btnType) => {
