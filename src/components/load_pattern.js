@@ -1,6 +1,5 @@
 import { React, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
 import {
   Form, ListGroup, InputGroup, Button, FormControl,
 } from 'react-bootstrap';
@@ -27,7 +26,7 @@ const LoadPattern = function (props) {
       <ListGroup className="found-sound-list">
         {patterns.map(
           (i) => (
-            <ListGroup.Item key={uuidv4()} className="found-sound-list-item">
+            <ListGroup.Item key={i._id} className="found-sound-list-item">
               <button
                 type="button"
                 onClick={() => handleClick(i.steps)}

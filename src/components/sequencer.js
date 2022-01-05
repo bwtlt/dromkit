@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as Realm from 'realm-web';
+import { v4 as uuidv4 } from 'uuid';
 import Step from './step';
 import SoundSource from '../classes/sound_source';
 import Line from './line';
@@ -21,14 +22,17 @@ class Sequencer extends React.Component {
       activeNote: -1,
       instruments: [
         {
+          id: uuidv4(),
           source: new SoundSource('568581'),
           steps: new Steps(),
         },
         {
+          id: uuidv4(),
           source: new SoundSource('528870'),
           steps: new Steps(),
         },
         {
+          id: uuidv4(),
           source: new SoundSource('332367'),
           steps: new Steps(),
         },
@@ -42,8 +46,8 @@ class Sequencer extends React.Component {
     const { app } = this.state;
     await app.logIn(Realm.Credentials.anonymous());
     const client = app.currentUser.mongoClient('mongodb-atlas');
-    const rests = client.db('patterns').collection('patterns');
-    this.setState({ patterns: (await rests.find()).slice(0, 10) });
+    const documents = client.db('patterns').collection('patterns');
+    this.setState({ patterns: (await documents.find()).slice(0, 10) });
   }
 
   play = (BPM) => {
