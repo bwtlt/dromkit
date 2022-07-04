@@ -12,16 +12,12 @@ const Properties = React.forwardRef((props, ref) => {
   const { properties } = props;
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
-    <Popover ref={ref} {...props}>
+    <Popover ref={ref} {...props} id="popover-positioned-top">
       <Popover.Header as="h3">{properties.name}</Popover.Header>
       <Popover.Body>
         <dl>
-          <dt>Description</dt>
-          <dd dangerouslySetInnerHTML={{ __html: properties.description }} />
           <dt>URL</dt>
           <dd><a href={properties.url}>{properties.url}</a></dd>
-          <dt>User</dt>
-          <dd>{properties.username}</dd>
           <dt>License</dt>
           <dd><a href={properties.license}>{properties.license}</a></dd>
         </dl>
@@ -125,7 +121,7 @@ class Track extends React.Component {
     const ref = React.createRef();
 
     const label = (
-      <OverlayTrigger placement="left" trigger="click" overlay={properties && <Properties ref={ref} properties={properties} />}>
+      <OverlayTrigger placement="top" trigger="focus" overlay={properties && <Properties ref={ref} properties={properties} />}>
         <span className="instrument-overlay">{state === 'ready' ? properties.name : ''}</span>
       </OverlayTrigger>
     );
