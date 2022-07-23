@@ -144,7 +144,7 @@ class Sequencer extends React.Component {
     const { instruments, patterns } = this.state;
     const pattern = { name };
     pattern.steps = instruments.map((inst) => (
-      inst.notes.map((note) => (note.enabled))
+      inst.steps.notes.map((note) => (note.enabled))
     ));
     this.setState({ patterns: [...patterns, pattern] });
   }
